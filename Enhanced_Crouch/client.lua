@@ -31,11 +31,11 @@ RemoveCrouchAnim = function()
 end
 
 CanCrouch = function()
-	if IsPedOnFoot(PlayerInfo.playerPed) and not IsPedInAnyVehicle(PlayerInfo.playerPed, false) and not IsPedJumping(PlayerInfo.playerPed) and not IsPedFalling(PlayerInfo.playerPed) and not IsPedDeadOrDying(PlayerInfo.playerPed) then
-		return true
-	else
-		return false
-	end
+    if IsPedOnFoot(PlayerInfo.playerPed) and not IsPedInAnyVehicle(PlayerInfo.playerPed, false) and not IsPedJumping(PlayerInfo.playerPed) and not IsPedFalling(PlayerInfo.playerPed) and not IsPedDeadOrDying(PlayerInfo.playerPed) then
+        return true
+    else
+        return false
+    end
 end
 
 CrouchPlayer = function()
@@ -113,3 +113,19 @@ IsCrouched = function()
 end
 
 exports("IsCrouched", IsCrouched)
+
+RegisterCommand('crouch', function()
+    DisableControlAction(0, 36, true) -- magic
+    if not Cooldown and not IsPedInAnyVehicle(PlayerPedId(), false) then
+        CrouchedForce = not CrouchedForce
+
+        if CrouchedForce then
+            CreateThread(CrouchLoop) -- Magic Part 2 lamo
+        end
+
+        Cooldown = true
+        SetTimeout(CoolDownTime, function()
+            Cooldown = false
+        end)
+    end
+end, false)
